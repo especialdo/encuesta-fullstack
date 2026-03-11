@@ -18,9 +18,11 @@ import { PreguntaOrmEntity } from './infrastructure/entities-orm/pregunta-orm.en
 import { OpcionOrmEntity } from './infrastructure/entities-orm/opcion-orm.entity';
 import { RespuestaEncuestaOrmEntity } from './infrastructure/entities-orm/respuesta-encuesta-orm.entity';
 import { RespuestaOrmEntity } from './infrastructure/entities-orm/respuesta-orm.entity';
+import { EncuestaWsModule } from 'src/websocket/encuesta-ws.module';
 
 @Module({
   imports: [
+    EncuestaWsModule,
     TypeOrmModule.forFeature([
       EncuestaOrmEntity,
       PreguntaOrmEntity,

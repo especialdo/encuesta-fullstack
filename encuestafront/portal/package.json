@@ -35,6 +35,7 @@
     "@ngrx/entity": "^21.0.1",
     "@ngrx/store": "^21.0.1",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.8.3",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -42,6 +43,7 @@
     "@angular/cli": "^21.0.3",
     "@angular/compiler-cli": "^21.0.0",
     "@ngrx/schematics": "^21.0.1",
+    "@types/socket.io-client": "^1.4.36",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"

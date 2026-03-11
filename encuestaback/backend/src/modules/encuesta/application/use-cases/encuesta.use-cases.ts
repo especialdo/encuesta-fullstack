@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { Observable, map, switchMap } from 'rxjs';
+import { Observable, map, switchMap, tap } from 'rxjs';
 
 import {
   ENCUESTA_REPOSITORY_PORT,
@@ -20,6 +20,7 @@ import { EncuestaAssembler } from './encuesta.assembler';
 import { type TokenPayload } from '../../../auth/domain/ports/out/token-payload.port';
 import { Pregunta } from '@modules/encuesta/domain/entities/pregunta.entity';
 import { Opcion } from '@modules/encuesta/domain/entities/opcion.entity';
+import { EncuestaGateway } from 'src/websocket/encuesta-ws/EncuestaGateway';
 
 // ── Crear encuesta ────────────────────────────────────────────────────────────
 @Injectable()
@@ -116,6 +117,7 @@ export class ResponderEncuestaUseCase {
   constructor(
     @Inject(ENCUESTA_REPOSITORY_PORT)
     private readonly repo: EncuestaRepositoryPort,
+    private readonly gateway: EncuestaGateway,
   ) {}
 
   execute(
@@ -144,6 +146,14 @@ export class ResponderEncuestaUseCase {
         return this.repo.saveRespuesta(respuesta);
       }),
       map(EncuestaAssembler.toRespuestaResponse),
+      tap((saved) => {
+        // ─── Notificar via WebSocket ──────────────────────────────────────
+        this.gateway.notificarNuevaRespuesta(encuestaId, {
+          nombreRespondente: saved.nombreRespondente,
+          fechaRespuesta: saved.fechaRespuesta,
+          totalRespuestas: saved.respuestas?.length ?? 0,
+        });
+      }),
     );
   }
 }
