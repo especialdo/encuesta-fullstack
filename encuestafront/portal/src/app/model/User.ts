@@ -1,5 +1,3 @@
-// model/User.ts
-
 export class User {
   constructor(
     public id: string,
@@ -10,7 +8,6 @@ export class User {
   ) {}
 }
 
-// ✅ Interface en lugar de clase
 export interface AuthState {
   token: string | null;
   user: User | null;
@@ -19,7 +16,6 @@ export interface AuthState {
   error: string | null;
 }
 
-// ✅ Objeto plano en lugar de new AuthState()
 export const initialAuthState: AuthState = {
   token: null,
   user: null,

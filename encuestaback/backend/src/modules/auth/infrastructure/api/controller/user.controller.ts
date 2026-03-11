@@ -23,7 +23,7 @@ import {
 import { RegisterResponseDto } from '@modules/auth/application/dtos/user.dto';
 
 @ApiTags('Auth')
-@Controller({ path: 'auth', version: '1' })
+@Controller({ path: 'auth' })
 export class AuthController {
   constructor(
     private readonly register: RegisterUseCase,

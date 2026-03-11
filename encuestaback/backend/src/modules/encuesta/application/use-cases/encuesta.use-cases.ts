@@ -18,6 +18,8 @@ import {
 } from '../dtos/encuesta.dto';
 import { EncuestaAssembler } from './encuesta.assembler';
 import { type TokenPayload } from '../../../auth/domain/ports/out/token-payload.port';
+import { Pregunta } from '@modules/encuesta/domain/entities/pregunta.entity';
+import { Opcion } from '@modules/encuesta/domain/entities/opcion.entity';
 
 // ── Crear encuesta ────────────────────────────────────────────────────────────
 @Injectable()
@@ -32,10 +34,20 @@ export class CrearEncuestaUseCase {
     creador: TokenPayload,
   ): Observable<EncuestaResponseDto> {
     const encuesta = Encuesta.create({
-      id: 0, // lo asigna la BD
+      id: 0,
       titulo: dto.titulo,
       descripcion: dto.descripcion,
       creadorId: creador.sub,
+      preguntas: dto.preguntas.map((p) =>
+        Pregunta.create({
+          id: 0,
+          texto: p.texto,
+          tipo: p.tipo,
+          opciones: (p.opciones ?? []).map((o) =>
+            Opcion.create({ id: 0, texto: o.texto }),
+          ),
+        }),
+      ),
     });
     return this.repo.save(encuesta).pipe(map(EncuestaAssembler.toResponse));
   }

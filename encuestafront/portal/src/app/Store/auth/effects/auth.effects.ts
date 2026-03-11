@@ -40,7 +40,7 @@ export class AuthEffects {
         ofType(LoginActions.loginSuccess),
         tap(({ token }) => {
           this.authService.saveToken(token);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/panel/dashboard']);
         }),
       ),
     { dispatch: false },

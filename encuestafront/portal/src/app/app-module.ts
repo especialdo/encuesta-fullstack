@@ -10,19 +10,36 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AuthEffects } from './Store/auth/effects/auth.effects';
 import { authFeatureKey, authReducer } from './Store/auth/reducers/auth.reducer';
-import { provideHttpClient } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
+import { EncuestasEffects } from './Store/encuesta/effects/encuesta.effects';
+import { AuthInterceptor } from './guard/AuthInterceptor';
+import { encuestasFeatureKey, encuestasReducer } from './Store/encuesta/reducers/encuesta.reducer';
 
 @NgModule({
   declarations: [App, NoPageFoundComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     StoreModule.forFeature(authFeatureKey, authReducer),
-    EffectsModule.forFeature([AuthEffects]),
+    StoreModule.forFeature(encuestasFeatureKey, encuestasReducer),
+    EffectsModule.forFeature([AuthEffects, EncuestasEffects]),
   ],
-  providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [App],
 })
 export class AppModule {}

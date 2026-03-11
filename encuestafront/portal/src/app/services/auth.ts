@@ -11,7 +11,7 @@ import { User } from '../model/User';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly BASE_URL = 'http://127.0.0.1:3000/api/auth';
+  private readonly BASE_URL = 'http://localhost:3000/api/auth';
   private readonly TOKEN_KEY = 'survey_token';
 
   constructor(private http: HttpClient) {}
@@ -19,6 +19,7 @@ export class AuthService {
   // ─── HTTP ──────────────────────────────────────────────────────────────────
 
   login(dto: LoginRequestDto): Observable<AuthResponseDto> {
+    console.log(dto);
     return this.http
       .post<{ access_token: string }>(`${this.BASE_URL}/login`, dto)
       .pipe(map((res) => AuthResponseDto.fromJson(res)));
