@@ -19,6 +19,11 @@ import {
 import { EncuestasEffects } from './Store/encuesta/effects/encuesta.effects';
 import { AuthInterceptor } from './guard/AuthInterceptor';
 import { encuestasFeatureKey, encuestasReducer } from './Store/encuesta/reducers/encuesta.reducer';
+import {
+  resultadosFeatureKey,
+  resultadosReducer,
+} from './Store/encuesta/reducers/resultados.reducer';
+import { ResultadosEffects } from './Store/encuesta/effects/resultados.effects';
 
 @NgModule({
   declarations: [App, NoPageFoundComponent],
@@ -30,6 +35,7 @@ import { encuestasFeatureKey, encuestasReducer } from './Store/encuesta/reducers
     EffectsModule.forRoot([]),
     StoreModule.forFeature(authFeatureKey, authReducer),
     StoreModule.forFeature(encuestasFeatureKey, encuestasReducer),
+
     EffectsModule.forFeature([AuthEffects, EncuestasEffects]),
   ],
   providers: [

@@ -76,8 +76,8 @@ export class EncuestaTypeOrmRepository implements EncuestaRepositoryPort {
     orm.respuestas = respuesta.respuestas.map((r) => {
       const rOrm = new RespuestaOrmEntity();
       rOrm.preguntaId = r.preguntaId;
-      rOrm.opcionId = r.opcionId ?? 0;
-      rOrm.respuestaTexto = r.respuestaTexto ?? '';
+      rOrm.opcionId = r.opcionId ?? null;
+      rOrm.respuestaTexto = r.respuestaTexto ?? null;
       return rOrm;
     });
 

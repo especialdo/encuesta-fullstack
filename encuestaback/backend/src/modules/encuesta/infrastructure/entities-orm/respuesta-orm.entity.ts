@@ -28,9 +28,9 @@ export class RespuestaOrmEntity {
   @JoinColumn({ name: 'opcion_id' })
   opcion: any;
 
-  @Column({ name: 'opcion_id', nullable: true })
-  opcionId: number;
+  @Column({ name: 'opcion_id', nullable: true, type: 'int' })
+  opcionId: number | null;
 
-  @Column({ name: 'respuesta_texto', nullable: true })
-  respuestaTexto: string;
+  @Column({ name: 'respuesta_texto', nullable: true, type: 'varchar' })
+  respuestaTexto: string | null;
 }

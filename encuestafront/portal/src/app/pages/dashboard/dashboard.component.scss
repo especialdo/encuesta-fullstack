@@ -431,7 +431,11 @@ $card-hover:     0 8px 28px rgba(21,101,192,0.14);
     span { display: flex; align-items: center; justify-content: center; gap: 4px; }
     mat-icon { font-size: 16px; width: 16px; height: 16px; }
   }
-
+  .btn-results {
+    border-color: $border !important;
+    color: $text-secondary !important;
+    &:hover { border-color: #00ACC1 !important; color: #00ACC1 !important; }
+  }
   .btn-share {
     border-color: $border !important;
     color: $text-secondary !important;

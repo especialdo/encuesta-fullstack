@@ -87,9 +87,16 @@ export class EncuestaResponseDto {
   preguntas: PreguntaResponseDto[];
 }
 
+export class RespuestaItemResponseDto {
+  @ApiProperty() preguntaId: number;
+  @ApiPropertyOptional() opcionId?: number | null;
+  @ApiPropertyOptional() respuestaTexto?: string | null;
+}
 export class RespuestaEncuestaResponseDto {
   @ApiProperty() id: number;
   @ApiProperty() nombreRespondente: string;
   @ApiProperty() fechaRespuesta: Date;
   @ApiProperty() encuestaId: number;
+  @ApiProperty({ type: [RespuestaItemResponseDto] })
+  respuestas: RespuestaItemResponseDto[];
 }
