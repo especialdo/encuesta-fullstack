@@ -41,7 +41,7 @@ import { AuthController } from './infrastructure/api/controller/user.controller'
     { provide: PASSWORD_HASHER_PORT, useClass: BcryptHasherAdapter },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
-    { provide: PASSWORD_HASHER_PORT, useClass: BcryptHasherAdapter },
+
     RegisterUseCase,
     SignInUseCase,
     FindAllUsersUseCase,

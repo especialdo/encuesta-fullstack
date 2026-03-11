@@ -1,0 +1,342 @@
+@use '@angular/material' as mat;
+
+// ─── Variables ──────────────────────────────────────────────────────────────
+$primary:       #1565C0;
+$primary-dark:  #0D47A1;
+$primary-light: #1976D2;
+$accent:        #00ACC1;
+$surface:       #FFFFFF;
+$background:    #F4F6F9;
+$text-primary:  #1A2332;
+$text-secondary:#5A6A7E;
+$border:        #DDE3EE;
+$error:         #D32F2F;
+$success:       #2E7D32;
+
+// ─── Layout ─────────────────────────────────────────────────────────────────
+.auth-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: $background;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+// ─── Brand Panel ────────────────────────────────────────────────────────────
+.brand-panel {
+  position: relative;
+  flex: 0 0 480px;
+  background: linear-gradient(145deg, $primary-dark 0%, $primary 55%, $primary-light 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  @media (max-width: 900px) { display: none; }
+}
+
+.brand-content {
+  position: relative;
+  z-index: 2;
+  padding: 48px;
+  color: white;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 48px;
+
+  .logo-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: white;
+  }
+}
+
+.brand-hero {
+  margin-bottom: 36px;
+}
+
+.brand-title {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0 0 14px;
+  color: white;
+
+  .highlight {
+    color: rgba(255,255,255,0.75);
+    display: block;
+  }
+}
+
+.brand-subtitle {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.72);
+  margin: 0;
+  max-width: 320px;
+}
+
+// ─── Feature List ───────────────────────────────────────────────────────────
+.feature-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  .feature-icon {
+    flex-shrink: 0;
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: rgba(255,255,255,0.85);
+    }
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+  }
+
+  span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.62);
+    line-height: 1.4;
+  }
+}
+
+// ─── Decorative Circles ─────────────────────────────────────────────────────
+.brand-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.circle-1 { width: 350px; height: 350px; bottom: -80px; right: -80px; }
+.circle-2 { width: 220px; height: 220px; top: 60px; right: -40px; }
+.circle-3 { width: 120px; height: 120px; top: -30px; left: 60px; }
+
+// ─── Form Panel ─────────────────────────────────────────────────────────────
+.form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: $surface;
+  overflow-y: auto;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 440px;
+}
+
+// ─── Form Header ────────────────────────────────────────────────────────────
+.mobile-logo {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  color: $primary;
+  font-size: 18px;
+  font-weight: 700;
+
+  mat-icon { font-size: 26px; width: 26px; height: 26px; }
+
+  @media (max-width: 900px) { display: flex; }
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: $text-primary;
+  margin: 0 0 8px;
+  letter-spacing: -0.3px;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: $text-secondary;
+  margin: 0 0 28px;
+}
+
+// ─── Error Alert ────────────────────────────────────────────────────────────
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #FFEBEE;
+  border: 1px solid #FFCDD2;
+  border-left: 4px solid $error;
+  border-radius: 8px;
+  color: $error;
+  font-size: 13px;
+  margin-bottom: 20px;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+// ─── Form Fields ────────────────────────────────────────────────────────────
+.full-width {
+  width: 100%;
+  margin-bottom: 2px;
+
+  ::ng-deep {
+    .mat-mdc-form-field-subscript-wrapper { margin-bottom: 4px; }
+    .mat-mdc-text-field-wrapper { border-radius: 10px !important; }
+    .mdc-notched-outline__leading  { border-radius: 10px 0 0 10px !important; }
+    .mdc-notched-outline__trailing { border-radius: 0 10px 10px 0 !important; }
+    .mat-mdc-form-field-icon-prefix mat-icon { color: $text-secondary; margin-right: 4px; }
+  }
+}
+
+// ─── Password Strength ──────────────────────────────────────────────────────
+.strength-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -6px 0 14px;
+}
+
+.strength-bar {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.strength-segment {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: #E0E0E0;
+  transition: background 0.3s;
+
+  &.active {
+    &.weak   { background: #F44336; }
+    &.fair   { background: #FF9800; }
+    &.good   { background: #FFC107; }
+    &.strong { background: #4CAF50; }
+  }
+}
+
+.strength-label {
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 48px;
+  text-align: right;
+
+  &.weak   { color: #F44336; }
+  &.fair   { color: #FF9800; }
+  &.good   { color: #FFC107; }
+  &.strong { color: #4CAF50; }
+}
+
+// ─── Terms ──────────────────────────────────────────────────────────────────
+.terms-row {
+  margin: 8px 0 24px;
+}
+
+.terms-link {
+  color: $primary;
+  font-weight: 600;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+.terms-error {
+  display: block;
+  font-size: 12px;
+  color: $error;
+  margin-top: 4px;
+  margin-left: 36px;
+}
+
+// ─── Submit Button ──────────────────────────────────────────────────────────
+.submit-btn {
+  width: 100%;
+  height: 52px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%) !important;
+  box-shadow: 0 4px 16px rgba(21, 101, 192, 0.35) !important;
+  transition: box-shadow 0.2s, transform 0.15s !important;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: white;
+  }
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+  &:hover:not([disabled]) {
+    box-shadow: 0 6px 22px rgba(21, 101, 192, 0.45) !important;
+    transform: translateY(-1px);
+  }
+
+  &:active:not([disabled]) { transform: translateY(0); }
+  &[disabled] { opacity: 0.7; }
+
+  mat-spinner {
+    display: inline-block;
+    ::ng-deep circle { stroke: white !important; }
+  }
+}
+
+// ─── Form Footer ────────────────────────────────────────────────────────────
+.form-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: $text-secondary;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.login-link {
+  color: $primary;
+  font-weight: 700;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
