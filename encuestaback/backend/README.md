@@ -1,98 +1,256 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📋 Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST construida con **NestJS**, arquitectura **hexagonal (ports & adapters)**, base de datos **PostgreSQL** con TypeORM, autenticación **JWT** y notificaciones en tiempo real con **WebSockets**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🏗️ Arquitectura
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+El proyecto sigue el patrón de **arquitectura hexagonal** organizado por módulos:
 
-## Project setup
-
-```bash
-$ npm install
+```
+src/
+├── modules/
+│   ├── auth/                         # Módulo de autenticación
+│   │   ├── application/
+│   │   │   ├── dtos/                 # DTOs de request/response
+│   │   │   └── use-cases/            # Casos de uso (Register, SignIn)
+│   │   ├── domain/
+│   │   │   ├── entities/             # Entidades de dominio
+│   │   │   ├── ports/
+│   │   │   │   └── out/              # Puertos de salida (interfaces)
+│   │   │   └── value-objects/        # Value objects
+│   │   └── infrastructure/
+│   │       ├── adapters/             # Adaptadores (bcrypt)
+│   │       ├── api/controller/       # Controladores HTTP
+│   │       ├── decorators/           # Decoradores personalizados
+│   │       ├── entities/             # Entidades TypeORM
+│   │       ├── guards/               # Guards JWT y roles
+│   │       ├── mappers/              # Mappers dominio ↔ ORM
+│   │       └── repositories/        # Implementaciones de repositorios
+│   └── encuesta/                     # Módulo de encuestas
+│       ├── application/
+│       │   ├── assembler/            # Assemblers dominio → DTO
+│       │   ├── dtos/                 # DTOs de encuesta
+│       │   └── use-cases/            # Casos de uso CRUD + responder
+│       ├── domain/
+│       │   ├── entities/             # Encuesta, Pregunta, Opcion, RespuestaEncuesta
+│       │   ├── ports/out/            # EncuestaRepositoryPort
+│       │   └── value-objects/        # TipoPregunta enum
+│       └── infrastructure/
+│           ├── api/controller/       # EncuestaController
+│           ├── entities-orm/         # Entidades TypeORM
+│           ├── mappers/              # EncuestaMapper
+│           └── repositories/        # EncuestaTypeOrmRepository
+└── websocket/
+    ├── encuesta.gateway.ts           # WebSocket Gateway (Socket.IO)
+    └── encuesta-ws.module.ts         # Módulo WebSocket
 ```
 
-## Compile and run the project
+---
+
+## 🚀 Tecnologías
+
+| Tecnología      | Versión | Uso                       |
+| --------------- | ------- | ------------------------- |
+| NestJS          | ^10     | Framework principal       |
+| TypeORM         | ^0.3    | ORM para PostgreSQL       |
+| PostgreSQL      | ^15     | Base de datos             |
+| JWT             | —       | Autenticación             |
+| Socket.IO       | ^4      | WebSockets en tiempo real |
+| Bcrypt          | —       | Hash de contraseñas       |
+| Swagger         | —       | Documentación API         |
+| RxJS            | ^7      | Programación reactiva     |
+| class-validator | —       | Validación de DTOs        |
+
+---
+
+## ⚙️ Instalación
+
+### Requisitos previos
+
+- Node.js >= 18
+- PostgreSQL >= 15
+- npm >= 9
+
+### Pasos
 
 ```bash
-# development
-$ npm run start
+# 1. Clonar el repositorio
+git clone <url-repositorio>
+cd backend
 
-# watch mode
-$ npm run start:dev
+# 2. Instalar dependencias
+npm install
 
-# production mode
-$ npm run start:prod
+# 3. Configurar variables de entorno
+cp .env.example .env
 ```
 
-## Run tests
+### Variables de entorno
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```env
+# Base de datos
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password
+DB_NAME=surveypro
+
+# JWT
+JWT_SECRET=tu_secret_muy_seguro
+JWT_EXPIRES_IN=1d
+
+# App
+PORT=3000
+```
 
 ```bash
-# unit tests
-$ npm run test
+# 4. Ejecutar migraciones (si aplica)
+npm run migration:run
 
-# e2e tests
-$ npm run test:e2e
+# 5. Iniciar en desarrollo
+npm run start:dev
 
-# test coverage
-$ npm run test:cov
+# 6. Iniciar en producción
+npm run build
+npm run start:prod
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 📡 Endpoints
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+La documentación completa está disponible en Swagger:
+
+```
+http://localhost:3000/api/docs
+```
+
+### Auth `v1`
+
+| Método | Endpoint                | Descripción         | Auth |
+| ------ | ----------------------- | ------------------- | ---- |
+| POST   | `/api/v1/auth/register` | Registro de usuario | ❌   |
+| POST   | `/api/v1/auth/login`    | Login → JWT         | ❌   |
+| GET    | `/api/v1/auth/me`       | Perfil del token    | ✅   |
+
+### Encuestas `v1`
+
+| Método | Endpoint                           | Descripción          | Auth |
+| ------ | ---------------------------------- | -------------------- | ---- |
+| POST   | `/api/v1/encuestas`                | Crear encuesta       | ✅   |
+| GET    | `/api/v1/encuestas/mis-encuestas`  | Listar mis encuestas | ✅   |
+| DELETE | `/api/v1/encuestas/:id`            | Eliminar encuesta    | ✅   |
+| GET    | `/api/v1/encuestas/:id/respuestas` | Ver respuestas       | ✅   |
+| GET    | `/api/v1/encuestas/:id/publica`    | Ver encuesta pública | ❌   |
+| POST   | `/api/v1/encuestas/:id/responder`  | Responder encuesta   | ❌   |
+
+### Ejemplo request — Crear encuesta
+
+```json
+POST /api/v1/encuestas
+Authorization: Bearer <token>
+
+{
+  "titulo": "Satisfacción del cliente",
+  "descripcion": "Encuesta de satisfacción Q1 2026",
+  "preguntas": [
+    {
+      "texto": "¿Cómo calificarías nuestro servicio?",
+      "tipo": "cerrada",
+      "opciones": [
+        { "texto": "Excelente" },
+        { "texto": "Bueno" },
+        { "texto": "Regular" },
+        { "texto": "Malo" }
+      ]
+    },
+    {
+      "texto": "¿Qué mejorarías?",
+      "tipo": "abierta",
+      "opciones": []
+    }
+  ]
+}
+```
+
+### Ejemplo request — Responder encuesta
+
+```json
+POST /api/v1/encuestas/1/responder
+
+{
+  "nombreRespondente": "Juan Pérez",
+  "respuestas": [
+    { "preguntaId": 1, "opcionId": 2 },
+    { "preguntaId": 2, "respuestaTexto": "Mejoraría los tiempos de entrega" }
+  ]
+}
+```
+
+---
+
+## 🔌 WebSockets
+
+El servidor expone un namespace WebSocket en `/encuestas` usando Socket.IO.
+
+### Conexión
+
+```javascript
+const socket = io('http://localhost:3000/encuestas', {
+  transports: ['websocket'],
+});
+```
+
+### Eventos disponibles
+
+| Evento            | Dirección          | Descripción                   |
+| ----------------- | ------------------ | ----------------------------- |
+| `join-encuesta`   | Cliente → Servidor | Unirse a sala de una encuesta |
+| `leave-encuesta`  | Cliente → Servidor | Salir de sala                 |
+| `joined`          | Servidor → Cliente | Confirmación de unión         |
+| `nueva-respuesta` | Servidor → Cliente | Nueva respuesta recibida      |
+
+### Payload `nueva-respuesta`
+
+```json
+{
+  "encuestaId": 1,
+  "nombreRespondente": "Juan Pérez",
+  "fechaRespuesta": "2026-03-11T17:00:00.000Z",
+  "totalRespuestas": 3
+}
+```
+
+---
+
+## 🔐 Tipos de pregunta
+
+| Tipo       | Descripción                     |
+| ---------- | ------------------------------- |
+| `abierta`  | Respuesta de texto libre        |
+| `cerrada`  | Selección de una sola opción    |
+| `multiple` | Selección de múltiples opciones |
+
+---
+
+## 🧪 Scripts disponibles
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev      # Desarrollo con hot reload
+npm run start:debug    # Debug mode
+npm run build          # Compilar a producción
+npm run start:prod     # Ejecutar build de producción
+npm run lint           # Lint del código
+npm run test           # Ejecutar tests unitarios
+npm run test:e2e       # Ejecutar tests e2e
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 👤 Autor
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Desarrollado como parte del proyecto **SurveyPro** — plataforma de encuestas en tiempo real.
