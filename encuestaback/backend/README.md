@@ -97,7 +97,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=tu_password
-DB_NAME=surveypro
+DB_NAME=encuesta_db
 
 # JWT
 JWT_SECRET=tu_secret_muy_seguro
@@ -108,13 +108,11 @@ PORT=3000
 ```
 
 ```bash
-# 4. Ejecutar migraciones (si aplica)
-npm run migration:run
 
-# 5. Iniciar en desarrollo
+# 4. Iniciar en desarrollo
 npm run start:dev
 
-# 6. Iniciar en producción
+# 5. Iniciar en producción
 npm run build
 npm run start:prod
 ```
@@ -253,4 +251,4 @@ npm run test:e2e       # Ejecutar tests e2e
 
 ## 👤 Autor
 
-Desarrollado como parte del proyecto **SurveyPro** — plataforma de encuestas en tiempo real.
+Desarrollado como parte del proyecto **Arnaldo Rafael** — plataforma de encuestas en tiempo real.

@@ -29,7 +29,10 @@ import { AuthController } from './infrastructure/api/controller/user.controller'
       global: true,
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => ({
-        secret: cfg.get('JWT_SECRET', 'change_me'),
+        secret: cfg.get(
+          'JWT_SECRET',
+          'f9e2c7b3a8d14e5f9c6a2b1d7e8f4c3a9d1e6b7c2f5a8d3e4c9b1f7a6d2e8c4',
+        ),
         signOptions: { expiresIn: cfg.get('JWT_EXPIRES_IN', '1d') },
       }),
     }),
