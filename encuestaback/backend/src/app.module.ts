@@ -5,6 +5,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import databaseConfig from '@modules/auth/infrastructure/database/database.config';
 import { AuthModule } from '@modules/auth/auth.module';
+import { EncuestaModule } from './modules/encuesta/encuesta.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from '@modules/auth/auth.module';
         config.get<TypeOrmModuleOptions>('database')!,
     }),
     AuthModule,
+    EncuestaModule,
   ],
 })
 export class AppModule {}
