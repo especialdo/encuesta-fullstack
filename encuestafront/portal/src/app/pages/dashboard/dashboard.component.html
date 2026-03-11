@@ -115,7 +115,7 @@
         <div class="card-meta">
           <div class="meta-item">
             <mat-icon>help_outline</mat-icon>
-            <span>{{ encuesta.preguntas?.length || 0 }} pregunta{{ encuesta.preguntas?.length !== 1 ? 's' : '' }}</span>
+            <span>{{ encuesta.preguntas.length || 0 }} pregunta{{ encuesta.preguntas.length !== 1 ? 's' : '' }}</span>
           </div>
           <div class="meta-item">
             <mat-icon>calendar_today</mat-icon>
@@ -128,7 +128,12 @@
           <button mat-stroked-button class="btn-share" (click)="copiarEnlace(encuesta.id)">
             <mat-icon>share</mat-icon> Compartir
           </button>
-          <button mat-raised-button color="primary" [routerLink]="['/panel/encuesta', encuesta.id, 'responder']" class="btn-ver">
+          <button mat-stroked-button class="btn-results"
+            [routerLink]="['/panel/encuesta', encuesta.id, 'resultados']">
+            <mat-icon>bar_chart</mat-icon> Resultados
+          </button>
+          <button mat-raised-button color="primary" class="btn-ver"
+            [routerLink]="['/panel/encuesta', encuesta.id, 'responder']">
             <mat-icon>visibility</mat-icon> Ver
           </button>
         </div>

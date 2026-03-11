@@ -29,6 +29,11 @@ export class EncuestaAssembler {
       nombreRespondente: r.nombreRespondente,
       fechaRespuesta: r.fechaRespuesta,
       encuestaId: r.encuestaId,
+      respuestas: (r.respuestas ?? []).map((ri) => ({
+        preguntaId: ri.preguntaId,
+        opcionId: ri.opcionId ?? null,
+        respuestaTexto: ri.respuestaTexto ?? null,
+      })),
     };
   }
 }

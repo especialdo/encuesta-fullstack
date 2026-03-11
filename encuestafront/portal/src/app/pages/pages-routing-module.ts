@@ -4,12 +4,14 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { PagesComponent } from './pages.component';
 import { CrearEncuestaComponent } from './crear-encuesta/crear-encuesta.component';
 import { ResponderEncuestaComponent } from './responder-encuesta/responder-encuesta.component';
+import { authGuard } from '../guard/auth.guard';
+import { ResultadosComponent } from './resultados/resultados.component';
 
 const routes: Routes = [
   {
     path: '',
     component: PagesComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -31,6 +33,11 @@ const routes: Routes = [
   {
     path: 'encuesta/:id/responder',
     component: ResponderEncuestaComponent,
+  },
+  {
+    path: 'encuesta/:id/resultados',
+    canActivate: [authGuard],
+    component: ResultadosComponent,
   },
 ];
 

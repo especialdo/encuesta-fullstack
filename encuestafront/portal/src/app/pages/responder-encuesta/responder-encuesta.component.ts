@@ -65,10 +65,18 @@ export class ResponderEncuestaComponent implements OnInit {
       return;
     }
     const { nombreRespondente, respuestas } = this.form.value;
+
+    // Limpia valores vacíos antes de enviar
+    const respuestasLimpias = respuestas.map((r: any) => ({
+      preguntaId: r.preguntaId,
+      ...(r.opcionId ? { opcionId: Number(r.opcionId) } : {}),
+      ...(r.respuestaTexto ? { respuestaTexto: r.respuestaTexto } : {}),
+    }));
+
     this.store.dispatch(
       EncuestasActions.responderEncuesta({
         id: this.encuestaId,
-        dto: { nombreRespondente, respuestas },
+        dto: { nombreRespondente, respuestas: respuestasLimpias },
       }),
     );
     this.submitted = true;

@@ -27,7 +27,7 @@
           <h1 class="encuesta-titulo">{{ encuesta.titulo }}</h1>
           <p class="encuesta-desc">{{ encuesta.descripcion }}</p>
           <div class="encuesta-meta">
-            <span><mat-icon>help_outline</mat-icon> {{ encuesta.preguntas?.length }} preguntas</span>
+            <span><mat-icon>help_outline</mat-icon> {{ encuesta.preguntas.length }} preguntas</span>
             <span><mat-icon>calendar_today</mat-icon> {{ encuesta.fechaCreacion | date:'mediumDate':'':'es' }}</span>
           </div>
         </div>
@@ -69,16 +69,15 @@
                 }
 
                 @if(pregunta.tipo === 'multiple') {
-                  <div class="checkbox-group">
+                  <mat-radio-group formControlName="opcionId" class="radio-group">
                     @for(opcion of pregunta.opciones; track opcion.id) {
-                      <mat-checkbox class="checkbox-option" color="primary">
+                      <mat-radio-button [value]="opcion.id" class="radio-option" color="primary">
                         {{ opcion.texto }}
-                      </mat-checkbox>
+                      </mat-radio-button>
                     }
-                  </div>
+                  </mat-radio-group>
                 }
-
-              </div>
+                              </div>
             }
           </div>
 

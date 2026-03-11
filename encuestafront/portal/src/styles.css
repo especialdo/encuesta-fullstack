@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+/* styles.css */
+
+/* Botones raised primary — texto blanco */
+.mat-mdc-raised-button.mat-primary .mdc-button__label {
+  color: white !important;
+}
+
+/* Botones stroked — texto heredado */
+.mat-mdc-outlined-button .mdc-button__label {
+  color: currentColor !important;
+}
+
+/* Botones raised sin color — texto oscuro */
+.mat-mdc-raised-button:not([color]) .mdc-button__label {
+  color: #1A2332 !important;
+}
+
+/* Fix general para todos los labels de botones */
+.mdc-button__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

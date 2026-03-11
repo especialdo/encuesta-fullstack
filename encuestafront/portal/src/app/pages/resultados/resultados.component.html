@@ -1,0 +1,236 @@
+<div class="dashboard-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <mat-icon>poll</mat-icon>
+      <span>SurveyPro</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/panel/dashboard">
+        <mat-icon>dashboard</mat-icon><span>Mis Encuestas</span>
+      </a>
+      <a class="nav-item active" href="#">
+        <mat-icon>bar_chart</mat-icon><span>Resultados</span>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- Loading -->
+    @if(loading$ | async) {
+      <div class="loading-state">
+        <mat-spinner diameter="52"></mat-spinner>
+        <p>Cargando resultados...</p>
+      </div>
+    }
+
+    <!-- Error -->
+    @if(error$ | async; as err) {
+      <div class="error-alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ err }}</span>
+      </div>
+    }
+
+    @if(data$ | async; as data) {
+      <!-- Header -->
+      <div class="results-header">
+        <button mat-icon-button routerLink="/dashboard" class="back-btn">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="header-info">
+          <h1 class="page-title">{{ data.titulo }}</h1>
+          <p class="page-subtitle">{{ data.descripcion }}</p>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon blue"><mat-icon>people</mat-icon></div>
+          <div>
+            <span class="stat-value">{{ data.totalRespondentes }}</span>
+            <span class="stat-label">Respondentes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon teal"><mat-icon>help_outline</mat-icon></div>
+          <div>
+            <span class="stat-value">{{ data.preguntas.length }}</span>
+            <span class="stat-label">Preguntas</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><mat-icon>check_circle_outline</mat-icon></div>
+          <div>
+            <span class="stat-value">
+              {{ data.totalRespondentes > 0 ? '100%' : '0%' }}
+            </span>
+            <span class="stat-label">Tasa de respuesta</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs-bar">
+        <button class="tab-btn" [class.active]="tabActivo === 'graficas'" (click)="tabActivo = 'graficas'">
+          <mat-icon>bar_chart</mat-icon> Gráficas
+        </button>
+        <button class="tab-btn" [class.active]="tabActivo === 'tabla'" (click)="tabActivo = 'tabla'">
+          <mat-icon>table_rows</mat-icon> Tabla de respuestas
+        </button>
+      </div>
+
+      <!-- ─── TAB GRÁFICAS ─────────────────────────────────────────────────── -->
+      @if(tabActivo === 'graficas') {
+        <div class="graficas-grid">
+          @for(pregunta of data.preguntas; track pregunta.preguntaId; let i = $index) {
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-num">P{{ i + 1 }}</span>
+                <div>
+                  <h3 class="chart-title">{{ pregunta.textoPregunta }}</h3>
+                  <span class="chart-tipo">
+                    @if(pregunta.tipo === 'abierta') { Respuesta abierta }
+                    @if(pregunta.tipo === 'cerrada') { Única respuesta }
+                    @if(pregunta.tipo === 'multiple') { Opción múltiple }
+                    · {{ pregunta.totalRespuestas }} respuesta{{ pregunta.totalRespuestas !== 1 ? 's' : '' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Pregunta abierta -->
+              @if(pregunta.tipo === 'abierta') {
+                @if(pregunta.respuestasAbiertas.length === 0) {
+                  <div class="empty-answers">
+                    <mat-icon>chat_bubble_outline</mat-icon>
+                    <p>Sin respuestas aún</p>
+                  </div>
+                } @else {
+                  <div class="respuestas-abiertas">
+                    @for(resp of pregunta.respuestasAbiertas; track $index) {
+                      <div class="respuesta-chip">
+                        <mat-icon>format_quote</mat-icon>
+                        <span>{{ resp }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+
+              <!-- Pregunta cerrada/multiple — barras -->
+              @if(esConOpciones(pregunta.tipo)) {
+                @if(pregunta.totalRespuestas === 0) {
+                  <div class="empty-answers">
+                    <mat-icon>bar_chart</mat-icon>
+                    <p>Sin respuestas aún</p>
+                  </div>
+                } @else {
+                  <div class="bar-chart">
+                    @for(opcion of pregunta.opcionStats; track opcion.opcionId; let j = $index) {
+                      <div class="bar-row">
+                        <span class="bar-label">{{ opcion.texto }}</span>
+                        <div class="bar-track">
+                          <div
+                            class="bar-fill"
+                            [style.width]="getBarWidth(opcion.porcentaje)"
+                            [style.background]="getColorByIndex(j)"
+                          ></div>
+                        </div>
+                        <div class="bar-stats">
+                          <span class="bar-pct">{{ opcion.porcentaje }}%</span>
+                          <span class="bar-count">{{ opcion.cantidad }}</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Mini pie visual -->
+                  <div class="pie-legend">
+                    @for(opcion of pregunta.opcionStats; track opcion.opcionId; let j = $index) {
+                      <div class="legend-item">
+                        <span class="legend-dot" [style.background]="getColorByIndex(j)"></span>
+                        <span class="legend-text">{{ opcion.texto }}</span>
+                        <span class="legend-val">{{ opcion.cantidad }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ─── TAB TABLA ────────────────────────────────────────────────────── -->
+      @if(tabActivo === 'tabla') {
+        <div class="tabla-section">
+          @if(data.respuestasRaw.length === 0) {
+            <div class="empty-tabla">
+              <mat-icon>inbox</mat-icon>
+              <p>No hay respuestas registradas aún</p>
+            </div>
+          } @else {
+            <div class="tabla-wrapper">
+              <table class="respuestas-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Respondente</th>
+                    <th>Fecha</th>
+                    <th>Respuestas</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for(resp of data.respuestasRaw; track resp.id; let i = $index) {
+                    <tr class="tabla-row" (click)="toggleTabla(resp.id)" [class.expanded]="tablaExpandida === resp.id">
+                      <td class="td-num">{{ i + 1 }}</td>
+                      <td class="td-name">
+                        <div class="respondente-cell">
+                          <div class="avatar">{{ resp.nombreRespondente[0].toUpperCase() }}</div>
+                          {{ resp.nombreRespondente }}
+                        </div>
+                      </td>
+                      <td class="td-fecha">{{ formatDate(resp.fechaRespuesta ?? '') }}</td>
+                      <td class="td-count">
+                        <span class="badge">{{ resp.respuestas.length }} resp.</span>
+                      </td>
+                      <td class="td-expand">
+                        <mat-icon>{{ tablaExpandida === resp.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+                      </td>
+                    </tr>
+
+                    <!-- Fila expandida -->
+                    @if(tablaExpandida === resp.id) {
+                      <tr class="detail-row">
+                        <td colspan="5">
+                          <div class="detail-content">
+                            @for(r of resp.respuestas; track r.preguntaId) {
+                              <div class="detail-item">
+                                <span class="detail-pregunta">
+                                  {{ getPreguntaTexto(data.preguntas, r.preguntaId) }}
+                                </span>
+                                <span class="detail-respuesta">
+                                  @if(r.respuestaTexto) { {{ r.respuestaTexto }} }
+                                  @if(r.opcionId) { {{ getOpcionTexto(data.preguntas, r.preguntaId, r.opcionId) }} }
+                                  @if(!r.respuestaTexto && !r.opcionId) { — }
+                                </span>
+                              </div>
+                            }
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      }
+    }
+  </main>
+</div>

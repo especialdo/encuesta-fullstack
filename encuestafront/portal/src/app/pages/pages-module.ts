@@ -19,6 +19,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ResultadosComponent } from './resultados/resultados.component';
+import { ResultadosEffects } from '../Store/encuesta/effects/resultados.effects';
+import {
+  resultadosFeatureKey,
+  resultadosReducer,
+} from '../Store/encuesta/reducers/resultados.reducer';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -26,8 +34,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     PagesComponent,
     ResponderEncuestaComponent,
     CrearEncuestaComponent,
+    ResultadosComponent,
   ],
-  exports: [DashboardComponent, PagesComponent, ResponderEncuestaComponent, CrearEncuestaComponent],
+  exports: [
+    DashboardComponent,
+    PagesComponent,
+    ResponderEncuestaComponent,
+    CrearEncuestaComponent,
+    ResultadosComponent,
+  ],
   imports: [
     CommonModule,
     PagesRoutingModule,
@@ -43,6 +58,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatInputModule,
     MatRadioModule,
     MatCheckboxModule,
+    MatIconModule,
+
+    StoreModule.forFeature(resultadosFeatureKey, resultadosReducer),
+    EffectsModule.forFeature([ResultadosEffects]),
   ],
 })
 export class PagesModule {}

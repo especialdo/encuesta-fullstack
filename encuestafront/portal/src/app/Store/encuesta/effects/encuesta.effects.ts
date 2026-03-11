@@ -101,12 +101,10 @@ export class EncuestasEffects {
     ),
   );
 
-  // ─── Eliminar Encuesta ────────────────────────────────────────────────────
+  // ─── Eliminar ─────────────────────────────────────────────────────────────
   eliminarEncuesta$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(EncuestasActions.eliminarEncuesta),
-      ofType(EncuestasActions.eliminarEncuestaSuccess),
-      tap(() => this.snack.open('Encuesta eliminada', 'Cerrar', { duration: 2500 })),
+      ofType(EncuestasActions.eliminarEncuesta), // ← solo este
       exhaustMap(({ id }) =>
         this.encuestasService.eliminarEncuesta(id).pipe(
           map(() => EncuestasActions.eliminarEncuestaSuccess({ id })),
@@ -120,5 +118,15 @@ export class EncuestasEffects {
         ),
       ),
     ),
+  );
+
+  // ─── Eliminar success — snack separado ────────────────────────────────────
+  eliminarEncuestaSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EncuestasActions.eliminarEncuestaSuccess),
+        tap(() => this.snack.open('Encuesta eliminada', 'Cerrar', { duration: 2500 })),
+      ),
+    { dispatch: false },
   );
 }
