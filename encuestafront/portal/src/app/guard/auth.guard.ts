@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = () => {
   }
 
   authService.removeToken();
-  return router.createUrlTree(['/login']);
+  return router.createUrlTree(['/auth/login']);
 };
 
 export const publicGuard: CanActivateFn = () => {
@@ -19,7 +19,7 @@ export const publicGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   if (authService.isTokenValid()) {
-    return router.createUrlTree(['/dashboard']);
+    return router.createUrlTree(['/panel/dashboard']);
   }
 
   return true;

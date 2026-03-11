@@ -86,7 +86,7 @@ export class AuthEffects {
         ofType(SessionActions.logout),
         tap(() => {
           this.authService.removeToken();
-          this.router.navigate(['/login']);
+          this.router.navigate(['/auth/login']);
         }),
       ),
     { dispatch: false },

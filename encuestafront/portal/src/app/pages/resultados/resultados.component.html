@@ -10,7 +10,7 @@
       <a class="nav-item" routerLink="/panel/dashboard">
         <mat-icon>dashboard</mat-icon><span>Mis Encuestas</span>
       </a>
-      <a class="nav-item active" href="#">
+      <a class="nav-item active">
         <mat-icon>bar_chart</mat-icon><span>Resultados</span>
       </a>
     </nav>
@@ -35,16 +35,36 @@
     }
 
     @if(data$ | async; as data) {
-      <!-- Header -->
       <div class="results-header">
-        <button mat-icon-button routerLink="/dashboard" class="back-btn">
+        <button mat-icon-button routerLink="/panel/dashboard" class="back-btn">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <div class="header-info">
-          <h1 class="page-title">{{ data.titulo }}</h1>
+          <div class="title-row">
+            <h1 class="page-title">{{ data.titulo }}</h1>
+            <span class="live-badge">
+              <span class="live-dot-sm"></span> EN VIVO
+            </span>
+          </div>
           <p class="page-subtitle">{{ data.descripcion }}</p>
         </div>
+        <button mat-icon-button (click)="recargarManual()" matTooltip="Recargar resultados" class="reload-btn">
+          <mat-icon>refresh</mat-icon>
+        </button>
       </div>
+    @if(mostrarNotificacion && ultimaRespuesta) {
+      <div class="live-banner">
+        <div class="live-dot"></div>
+        <mat-icon>notifications_active</mat-icon>
+        <span>
+          Nueva respuesta de <strong>{{ ultimaRespuesta.nombreRespondente }}</strong>
+          — datos actualizados automáticamente
+        </span>
+        <button mat-icon-button (click)="mostrarNotificacion = false" class="close-banner">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
 
       <!-- Stats Cards -->
       <div class="stats-row">

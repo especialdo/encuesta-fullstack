@@ -522,3 +522,98 @@ $danger:         #D32F2F;
   border-radius: 6px;
   border-left: 3px solid $primary;
 }
+
+// ─── Agrega estos estilos al final de resultados.component.scss ──────────────
+
+// Banner de nueva respuesta
+.live-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #E8F5E9, #F1F8E9);
+  border: 1px solid #A5D6A7;
+  border-left: 4px solid #43A047;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #2E7D32;
+  animation: slideDown 0.3s ease;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #43A047;
+    flex-shrink: 0;
+  }
+
+  span { flex: 1; }
+
+  strong { font-weight: 800; }
+
+  .close-banner {
+    color: #43A047 !important;
+    width: 28px;
+    height: 28px;
+    mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Dot animado grande (banner)
+.live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #43A047;
+  flex-shrink: 0;
+  animation: pulse 1.5s infinite;
+}
+
+// Badge EN VIVO en el header
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  background: #FFEBEE;
+  border: 1px solid #FFCDD2;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #E53935;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+// Dot animado pequeño (badge)
+.live-dot-sm {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #E53935;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%   { opacity: 1; transform: scale(1); }
+  50%  { opacity: 0.5; transform: scale(1.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+// Botón recarga
+.reload-btn {
+  color: #5A6A7E !important;
+  &:hover { color: #1565C0 !important; }
+}
