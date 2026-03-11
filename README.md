@@ -16,7 +16,7 @@ Puedes consultar la documentación del frontend en el siguiente enlace:
 
 
 
-👉 [Ver documentación del backend](https://github.com/especialdo/encuesta-fullstack/blob/main/encuestafront/portal/README.md)
+👉 [Ver documentación del frontend](https://github.com/especialdo/encuesta-fullstack/blob/main/encuestafront/portal/README.md)
 
 
 
