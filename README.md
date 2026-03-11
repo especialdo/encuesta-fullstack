@@ -1,9 +1,3 @@
-
-
----
-
-
-
 \## ⚙️ Documentación del Backend
 
 
@@ -21,6 +15,8 @@ Puedes consultar la documentación del backend en el siguiente enlace:
 
 
 \## 👨‍💻 Autor
+
+
 
 Proyecto desarrollado por \*\*Arnaldo Rafael\*\*.
 
