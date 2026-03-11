@@ -1,0 +1,141 @@
+<div class="dashboard-shell">
+
+  <!-- ─── Sidebar ──────────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <mat-icon>poll</mat-icon>
+      <span>SurveyPro</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active" routerLink="/dashboard">
+        <mat-icon>dashboard</mat-icon>
+        <span>Mis Encuestas</span>
+      </a>
+      <a class="nav-item" routerLink="/panel/crear">
+        <mat-icon>add_circle_outline</mat-icon>
+        <span>Nueva Encuesta</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info" *ngIf="user$ | async as user">
+        <div class="user-avatar">{{ (user.name || user.email)[0].toUpperCase() }}</div>
+        <div class="user-details">
+          <span class="user-name">{{ user.name || 'Usuario' }}</span>
+          <span class="user-email">{{ user.email }}</span>
+        </div>
+      </div>
+      <button mat-icon-button class="logout-btn" (click)="logout()" matTooltip="Cerrar sesión">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ─── Main Content ──────────────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Mis Encuestas</h1>
+        <span class="page-subtitle" *ngIf="total$ | async as total">
+          {{ total }} encuesta{{ total !== 1 ? 's' : '' }} creada{{ total !== 1 ? 's' : '' }}
+        </span>
+      </div>
+      <button mat-raised-button color="primary" routerLink="/panel/crear" class="btn-nueva">
+        <mat-icon>add</mat-icon>
+        Nueva encuesta
+      </button>
+    </header>
+
+    <!-- Loading -->
+    <div class="loading-state" *ngIf="loading$ | async">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Cargando encuestas...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!(loading$ | async) && (encuestas$ | async)?.length === 0">
+      <div class="empty-icon">
+        <mat-icon>poll</mat-icon>
+      </div>
+      <h3>Aún no tienes encuestas</h3>
+      <p>Crea tu primera encuesta y comienza a recopilar respuestas</p>
+      <button mat-raised-button color="primary" routerLink="/dashboard/crear">
+        <mat-icon>add</mat-icon>
+        Crear primera encuesta
+      </button>
+    </div>
+
+    <!-- Grid de Encuestas -->
+    <div class="surveys-grid" *ngIf="!(loading$ | async) && (encuestas$ | async)?.length! > 0">
+      <div
+        class="survey-card"
+        *ngFor="let encuesta of (encuestas$ | async); trackBy: trackById"
+        [class.confirm-mode]="confirmDeleteId === encuesta.id"
+      >
+        <!-- Confirm Delete Overlay -->
+        <div class="confirm-overlay" *ngIf="confirmDeleteId === encuesta.id">
+          <mat-icon class="confirm-icon">warning_amber</mat-icon>
+          <p>¿Eliminar esta encuesta?</p>
+          <span>Esta acción no se puede deshacer</span>
+          <div class="confirm-actions">
+            <button mat-stroked-button (click)="cancelarEliminar()">Cancelar</button>
+            <button mat-raised-button color="warn" (click)="eliminar(encuesta.id)">Eliminar</button>
+          </div>
+        </div>
+
+        <!-- Card Header -->
+        <div class="card-header">
+          <div class="card-badge">
+            <mat-icon>poll</mat-icon>
+          </div>
+          <button mat-icon-button [matMenuTriggerFor]="cardMenu" class="card-menu-btn">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #cardMenu="matMenu">
+            <button mat-menu-item (click)="copiarEnlace(encuesta.id)">
+              <mat-icon>link</mat-icon> Copiar enlace
+            </button>
+            <button mat-menu-item color="warn" (click)="confirmarEliminar(encuesta.id)">
+              <mat-icon color="warn">delete_outline</mat-icon>
+              <span style="color: #d32f2f">Eliminar</span>
+            </button>
+          </mat-menu>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <h3 class="card-title">{{ encuesta.titulo }}</h3>
+          <p class="card-desc">{{ encuesta.descripcion }}</p>
+        </div>
+
+        <!-- Card Meta -->
+        <div class="card-meta">
+          <div class="meta-item">
+            <mat-icon>help_outline</mat-icon>
+            <span>{{ encuesta.preguntas?.length || 0 }} pregunta{{ encuesta.preguntas?.length !== 1 ? 's' : '' }}</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon>calendar_today</mat-icon>
+            <span>{{ formatDate(encuesta.fechaCreacion) }}</span>
+          </div>
+        </div>
+
+        <!-- Card Actions -->
+        <div class="card-actions">
+          <button mat-stroked-button class="btn-share" (click)="copiarEnlace(encuesta.id)">
+            <mat-icon>share</mat-icon> Compartir
+          </button>
+          <button mat-raised-button color="primary" [routerLink]="['/panel/encuesta', encuesta.id, 'responder']" class="btn-ver">
+            <mat-icon>visibility</mat-icon> Ver
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+</div>

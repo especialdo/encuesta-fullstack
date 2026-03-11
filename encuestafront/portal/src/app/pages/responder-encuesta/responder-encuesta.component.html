@@ -1,0 +1,101 @@
+<div class="responder-wrapper">
+
+  @if(loading$ | async) {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Cargando encuesta...</p>
+    </div>
+  }
+
+  @if(submitted) {
+    <div class="success-state">
+      <div class="success-icon"><mat-icon>check_circle</mat-icon></div>
+      <h2>¡Respuestas enviadas!</h2>
+      <p>Gracias por completar esta encuesta. Tus respuestas han sido registradas exitosamente.</p>
+      <button mat-raised-button color="primary" routerLink="/">Volver al inicio</button>
+    </div>
+  }
+
+  @if(encuesta$ | async; as encuesta) {
+    @if(!submitted) {
+      <div class="encuesta-container">
+        <div class="encuesta-header">
+          <div class="header-brand">
+            <mat-icon>poll</mat-icon>
+            <span>SurveyPro</span>
+          </div>
+          <h1 class="encuesta-titulo">{{ encuesta.titulo }}</h1>
+          <p class="encuesta-desc">{{ encuesta.descripcion }}</p>
+          <div class="encuesta-meta">
+            <span><mat-icon>help_outline</mat-icon> {{ encuesta.preguntas?.length }} preguntas</span>
+            <span><mat-icon>calendar_today</mat-icon> {{ encuesta.fechaCreacion | date:'mediumDate':'':'es' }}</span>
+          </div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+          <div class="form-card">
+            <p class="question-label">Tu nombre <span class="required">*</span></p>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre completo</mat-label>
+              <input matInput formControlName="nombreRespondente" placeholder="Juan Pérez"/>
+              <mat-icon matPrefix>person_outline</mat-icon>
+              <mat-error>El nombre es obligatorio (mín. 3 caracteres)</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div formArrayName="respuestas">
+            @for(pregunta of encuesta.preguntas; track pregunta.id; let i = $index) {
+              <div class="form-card pregunta-card" [formGroupName]="i">
+                <p class="question-num">Pregunta {{ i + 1 }}</p>
+                <p class="question-text">{{ pregunta.texto }} <span class="required">*</span></p>
+
+                @if(pregunta.tipo === 'abierta') {
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Tu respuesta</mat-label>
+                    <textarea matInput formControlName="respuestaTexto" rows="3"
+                      placeholder="Escribe tu respuesta aquí..."></textarea>
+                  </mat-form-field>
+                }
+
+                @if(pregunta.tipo === 'cerrada') {
+                  <mat-radio-group formControlName="opcionId" class="radio-group">
+                    @for(opcion of pregunta.opciones; track opcion.id) {
+                      <mat-radio-button [value]="opcion.id" class="radio-option" color="primary">
+                        {{ opcion.texto }}
+                      </mat-radio-button>
+                    }
+                  </mat-radio-group>
+                }
+
+                @if(pregunta.tipo === 'multiple') {
+                  <div class="checkbox-group">
+                    @for(opcion of pregunta.opciones; track opcion.id) {
+                      <mat-checkbox class="checkbox-option" color="primary">
+                        {{ opcion.texto }}
+                      </mat-checkbox>
+                    }
+                  </div>
+                }
+
+              </div>
+            }
+          </div>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" class="btn-submit"
+              [disabled]="loading$ | async">
+              @if(loading$ | async) {
+                <mat-spinner diameter="18"></mat-spinner>
+              } @else {
+                <mat-icon>send</mat-icon> Enviar respuestas
+              }
+            </button>
+          </div>
+
+        </form>
+      </div>
+    }
+  }
+
+</div>

@@ -1,0 +1,131 @@
+<div class="auth-wrapper">
+
+  <!-- Left Panel: Branding -->
+  <aside class="brand-panel">
+    <div class="brand-content">
+      <div class="brand-logo">
+        <mat-icon class="logo-icon">poll</mat-icon>
+        <span class="logo-text">SurveyPro</span>
+      </div>
+      <div class="brand-hero">
+        <h1 class="brand-title">
+          Toma decisiones<br/>
+          <span class="highlight">basadas en datos</span>
+        </h1>
+        <p class="brand-subtitle">
+          Crea, distribuye y analiza encuestas profesionales
+          con resultados en tiempo real.
+        </p>
+      </div>
+      <div class="brand-stats">
+        <div class="stat">
+          <span class="stat-value">10K+</span>
+          <span class="stat-label">Encuestas creadas</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">98%</span>
+          <span class="stat-label">Satisfacción</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">500+</span>
+          <span class="stat-label">Empresas</span>
+        </div>
+      </div>
+    </div>
+    <div class="brand-decoration">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+    </div>
+  </aside>
+
+  <!-- Right Panel: Form -->
+  <main class="form-panel">
+    <div class="form-container">
+
+      <div class="form-header">
+        <div class="mobile-logo">
+          <mat-icon>poll</mat-icon>
+          <span>SurveyPro</span>
+        </div>
+        <h2 class="form-title">Bienvenido de vuelta</h2>
+        <p class="form-subtitle">Ingresa a tu cuenta para continuar</p>
+      </div>
+
+      <!-- Error Alert -->
+      <div class="error-alert" *ngIf="(error$ | async) as errorMsg">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMsg }}</span>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo electrónico</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="correo@empresa.com"
+            autocomplete="email"
+          />
+          <mat-icon matPrefix>mail_outline</mat-icon>
+          <mat-error>{{ getEmailError() }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            [attr.aria-label]="'Mostrar contraseña'"
+            (click)="hidePassword = !hidePassword"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error>{{ getPasswordError() }}</mat-error>
+        </mat-form-field>
+
+        <div class="form-options">
+          <mat-checkbox formControlName="remember" color="primary">
+            Recordarme
+          </mat-checkbox>
+          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="submit-btn"
+          [disabled]="(loading$ | async)"
+        >
+          <mat-spinner diameter="20" *ngIf="(loading$ | async); else btnText"></mat-spinner>
+          <ng-template #btnText>
+            <span>Iniciar sesión</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </ng-template>
+        </button>
+
+      </form>
+
+      <div class="form-footer">
+        <span>¿No tienes cuenta?</span>
+        <a routerLink="/auth/register" class="register-link">Regístrate gratis</a>
+      </div>
+
+    </div>
+  </main>
+
+</div>

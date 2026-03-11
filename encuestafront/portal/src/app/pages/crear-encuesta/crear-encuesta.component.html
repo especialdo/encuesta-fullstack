@@ -1,0 +1,149 @@
+<div class="dashboard-shell">
+
+  <!-- Sidebar (reuse same sidebar) -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <mat-icon>poll</mat-icon>
+      <span>SurveyPro</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/panel/dashboard">
+        <mat-icon>dashboard</mat-icon><span>Mis Encuestas</span>
+      </a>
+      <a class="nav-item active" routerLink="/panel/crear">
+        <mat-icon>add_circle_outline</mat-icon><span>Nueva Encuesta</span>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button mat-icon-button routerLink="/dashboard" class="back-btn">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div>
+          <h1 class="page-title">Nueva Encuesta</h1>
+          <p class="page-subtitle">Completa los datos y agrega tus preguntas</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Error -->
+    <div class="error-alert" *ngIf="error$ | async as err">
+      <mat-icon>error_outline</mat-icon><span>{{ err }}</span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Sección Info General -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <div>
+            <h2 class="section-title">Información general</h2>
+            <p class="section-sub">Título y descripción de la encuesta</p>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Título de la encuesta</mat-label>
+          <input matInput formControlName="titulo" placeholder="Ej: Satisfacción del cliente 2024"/>
+          <mat-icon matPrefix>title</mat-icon>
+          <mat-error *ngIf="form.get('titulo')?.hasError('required')">El título es obligatorio</mat-error>
+          <mat-error *ngIf="form.get('titulo')?.hasError('minlength')">Mínimo 5 caracteres</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput formControlName="descripcion" rows="3"
+            placeholder="Describe el objetivo de esta encuesta..."></textarea>
+          <mat-icon matPrefix>description</mat-icon>
+          <mat-error *ngIf="form.get('descripcion')?.hasError('required')">La descripción es obligatoria</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Sección Preguntas -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <div>
+            <h2 class="section-title">Preguntas</h2>
+            <p class="section-sub">{{ preguntas.length }} pregunta{{ preguntas.length !== 1 ? 's' : '' }} agregada{{ preguntas.length !== 1 ? 's' : '' }}</p>
+          </div>
+        </div>
+
+        <div formArrayName="preguntas">
+          <div class="pregunta-card" *ngFor="let p of preguntas.controls; let i = index" [formGroupName]="i">
+
+            <div class="pregunta-header">
+              <span class="pregunta-num">Pregunta {{ i + 1 }}</span>
+              <button mat-icon-button type="button" class="btn-remove-pregunta"
+                (click)="eliminarPregunta(i)" [disabled]="preguntas.length === 1"
+                matTooltip="Eliminar pregunta">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+
+            <div class="pregunta-body">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Texto de la pregunta</mat-label>
+                <input matInput formControlName="texto" placeholder="Ej: ¿Cómo calificarías nuestro servicio?"/>
+                <mat-error>El texto es obligatorio</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="tipo-field">
+                <mat-label>Tipo de pregunta</mat-label>
+                <mat-select formControlName="tipo" (selectionChange)="onTipoChange(i)">
+                  <mat-option *ngFor="let t of tiposPregunta" [value]="t.value">
+                    <mat-icon>{{ t.icon }}</mat-icon> {{ t.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Opciones -->
+            <div class="opciones-section" *ngIf="esConOpciones(i)">
+              <p class="opciones-label">Opciones de respuesta</p>
+              <div formArrayName="opciones">
+                <div class="opcion-row" *ngFor="let op of getOpciones(i).controls; let j = index" [formGroupName]="j">
+                  <span class="opcion-bullet">{{ j + 1 }}</span>
+                  <mat-form-field appearance="outline" class="opcion-field">
+                    <input matInput formControlName="texto" [placeholder]="'Opción ' + (j+1)"/>
+                    <mat-error>Requerido</mat-error>
+                  </mat-form-field>
+                  <button mat-icon-button type="button" class="btn-remove-opcion"
+                    (click)="eliminarOpcion(i, j)"
+                    [disabled]="getOpciones(i).length <= 2">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <button mat-stroked-button type="button" class="btn-add-opcion" (click)="agregarOpcion(i)">
+                <mat-icon>add</mat-icon> Agregar opción
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <button mat-stroked-button type="button" class="btn-add-pregunta" (click)="agregarPregunta()">
+          <mat-icon>add_circle_outline</mat-icon>
+          Agregar pregunta
+        </button>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" routerLink="/dashboard">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" class="btn-submit" [disabled]="loading$ | async">
+          <mat-spinner diameter="18" *ngIf="loading$ | async; else submitText"></mat-spinner>
+          <ng-template #submitText>
+            <mat-icon>save</mat-icon> Crear encuesta
+          </ng-template>
+        </button>
+      </div>
+
+    </form>
+  </main>
+</div>
